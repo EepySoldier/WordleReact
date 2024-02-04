@@ -7,6 +7,7 @@ function App() {
     Array(6).fill(Array(5).fill(""))
   ); // 6 inputs with 5 cells each
   const alphabet = "abcdefghijklmnopqrstuvwxyz".split("");
+  const [usedLetters, setUsedLetters] = useState([]);
   const [rowIndex, setRowIndex] = useState(0);
   const [cellIndex, setCellIndex] = useState(0);
   const guesses = useRef(0);
@@ -20,6 +21,7 @@ function App() {
 
   const [errorMessage, setErrorMessage] = useState("");
 
+  console.log(wordToGuess.current);
   const showError = (message) => {
     // Function to display error message
     setErrorMessage(message);
@@ -43,6 +45,7 @@ function App() {
     setHasWon(false);
     setGameEnded(false);
     setErrorMessage("");
+    setUsedLetters([]);
 
     for (let i = 0; i < 6; i++) {
       // Clear all input fields
@@ -142,9 +145,9 @@ function App() {
           wordLetters[wordToGuess.current[i].charCodeAt() - "A".charCodeAt()]++;
         }
 
+        let timesCorrect = 0;
         for (let i = 0; i < 5; i++) {
           // Letter is in the right place
-          let timesCorrect = 0;
           if (playerInput[i] === wordToGuess.current[i]) {
             children.children[i].style.backgroundColor = "#1df557";
             inputLetters[playerInput[i].charCodeAt() - "A".charCodeAt()]--;
@@ -152,10 +155,11 @@ function App() {
               wordToGuess.current[i].charCodeAt() - "A".charCodeAt()
             ]--;
             timesCorrect++;
-            if (timesCorrect === 5) {
-              setHasWon(true);
-              setGameEnded(true);
-            }
+            console.log("Correct +1");
+          }
+          if (timesCorrect === 5) {
+            setHasWon(true);
+            setGameEnded(true);
           }
         }
 
@@ -186,6 +190,10 @@ function App() {
           // If the user has made 6 guesses, the game ends
           setGameEnded(true);
         }
+        const rowLetters = Array.from(children.children).map((input) =>
+          input.value.toLowerCase()
+        );
+        setUsedLetters([...usedLetters, ...rowLetters]);
       }
     };
 
@@ -234,6 +242,7 @@ function App() {
             key={index}
             type="text"
             onClick={(event) => handleLetterClick(letter, event)}
+            className={usedLetters.includes(letter) ? "usedLetter" : ""}
           >
             {letter.toUpperCase()}
           </button>

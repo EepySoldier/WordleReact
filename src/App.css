@@ -161,3 +161,7 @@ header {
   outline: none;
   cursor: pointer;
 }
+
+.usedLetter {
+  background-color: #747474;
+}
