@@ -21,7 +21,6 @@ function App() {
 
   const [errorMessage, setErrorMessage] = useState("");
 
-  console.log(wordToGuess.current);
   const showError = (message) => {
     // Function to display error message
     setErrorMessage(message);
